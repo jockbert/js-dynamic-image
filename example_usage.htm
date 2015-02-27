@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script src="dynamicImage.min.js"></script> 
+</head>
+<body>
+	<img id="aPhoto" src="" style="width:100%" >
+	<script>
+		var myImage = new DynamicImage("aPhoto");
+		myImage.setWidthAlternatives(
+			[100,150,200,300,500,750,1000,1500,2000,3008],
+			["photos/scaled_100.jpg",
+			"photos/scaled_150.jpg",
+			"photos/scaled_200.jpg",
+			"photos/scaled_300.jpg",
+			"photos/scaled_500.jpg",
+			"photos/scaled_750.jpg",
+			"photos/scaled_1000.jpg",
+			"photos/scaled_1500.jpg",
+			"photos/scaled_2000.jpg",
+			"photos/original_3008.jpg"]);
+
+		 window.onresize = myImage.delayedUpdate;
+	</script>
+</body>
+</html>
