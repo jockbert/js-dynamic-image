@@ -32,7 +32,7 @@ function DynamicImage(elemId, delay, widths, srcs) {
 		srcs = ss;
 		currentWidth = -1;
 		this.delayedUpdate();
-	}
+	};
 
 	this.update = function(){
 		var elem = document.getElementById(elemId);
@@ -42,7 +42,7 @@ function DynamicImage(elemId, delay, widths, srcs) {
 		var width = widths[0];
 		for(var i = 1; i < widths.length  && widths[i-1] < elemWidth; ++i) {
 			src = srcs[i];
-			width = widths[i]
+			width = widths[i];
 		} 
 
 		if(width > currentWidth) {
@@ -50,7 +50,7 @@ function DynamicImage(elemId, delay, widths, srcs) {
 			currentWidth = width;
 			// console.log("dynamic image, view=" + elemWidth + " img=" + width);
 		}
-	}
+	};
 
 	this.delayedUpdate = delayedCall(this.update, delay);
 }
