@@ -29,8 +29,8 @@
 	<img id="bPhoto"></img>
 
 	<script>
-		var myAImage = new DynamicImage("aPhoto");
-		myAImage.setWidthAlternatives(
+		var imageA = new DynamicImage("aPhoto");
+		imageA.setWidths(
 			[100,150,200,300,500,750,1000,1500,2000,3008],
 			["photos/scaled_100.jpg",
 			"photos/scaled_150.jpg",
@@ -43,8 +43,8 @@
 			"photos/scaled_2000.jpg",
 			"photos/original_3008.jpg"]);
 
-		var myBImage = new DynamicImage("bPhoto");
-		myBImage.setWidthAlternatives(
+		var imageB = new DynamicImage("bPhoto");
+		imageB.setWidths(
 			[100,150,200,300,500,750,1000,1500,2000,3008],
 			["photos/scaled_100.jpg",
 			"photos/scaled_150.jpg",
@@ -57,8 +57,8 @@
 			"photos/scaled_2000.jpg",
 			"photos/original_3008.jpg"]);
 
-		myAImage.selfRegister();
-		myBImage.selfRegister();
+		imageA.register();
+		imageB.register();
 	</script>
 </body>
 </html>
