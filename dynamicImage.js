@@ -20,24 +20,12 @@ function DynamicImage(elemId, delay, widths, srcs, aspectRatio) {
     };
 
     function updateHeight() {
-        if (currentWidth == -1) updateHeightBasedOnWidth();
-        else updateHeightDefault();
-    }
-
-    function updateHeightBasedOnWidth() {
-        var height = Math.round(elem.offsetWidth / aspectRatio);
-        updateHeightIfChanged(height + 'px');
-    }
-
-    function updateHeightDefault() {
-        updateHeightIfChanged('100%');
-    }
-    function updateHeightIfChanged(height) {
-        if(elem.style.height != height) {
+        var height = currentWidth == -1 ? Math.round(elem.offsetWidth / aspectRatio) + 'px' : '100%';
+        if (elem.style.height != height) {
             elem.style.height = height;
         };
     }
-    
+
     function isElementInViewport(el) {
         var top = el.offsetTop,
             left = el.offsetLeft,
@@ -121,5 +109,5 @@ function DynamicImage(elemId, delay, widths, srcs, aspectRatio) {
     elem.src="data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
     //png version 
     // elem.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACAQMAAABIeJ9nAAAAA1BMVEWgoKAG03+7AAAACklEQVQI12MAAgAABAABINItbwAAAABJRU5ErkJggg==";
-    updateHeightBasedOnWidth();
+    updateHeight();
 }
