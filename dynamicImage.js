@@ -64,7 +64,6 @@ function DynamicImage(elemId, delay, widths, srcs, aspectRatio) {
         }
 
         if (width > currentWidth) {
-            console.log("source change to " + src);
             elem.src = src;
             currentWidth = width;
             updateHeight();
@@ -105,9 +104,6 @@ function DynamicImage(elemId, delay, widths, srcs, aspectRatio) {
 
     // --- creation preparations ----
     elem.style.width = '100%';
-    // gif version
-    elem.src="data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
-    //png version 
-    // elem.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACAQMAAABIeJ9nAAAAA1BMVEWgoKAG03+7AAAACklEQVQI12MAAgAABAABINItbwAAAABJRU5ErkJggg==";
+    elem.src = "data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
     updateHeight();
 }
