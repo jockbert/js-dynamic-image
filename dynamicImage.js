@@ -1,4 +1,4 @@
-// Dynamic Image version 2.1
+// Dynamic Image version 2.2
 
 function DynamicImage(elemId, delay, widths, srcs, aspectRatio) {
     widths = widths || [];
@@ -26,11 +26,16 @@ function DynamicImage(elemId, delay, widths, srcs, aspectRatio) {
 
     function updateHeightBasedOnWidth() {
         var height = Math.round(elem.offsetWidth / aspectRatio);
-        elem.style.height = '' + height + 'px';
+        updateHeightIfChanged(height + 'px');
     }
 
     function updateHeightDefault() {
-        elem.style.height = '100%';
+        updateHeightIfChanged('100%');
+    }
+    function updateHeightIfChanged(height) {
+        if(elem.style.height != height) {
+            elem.style.height = height;
+        };
     }
     
     function isElementInViewport(el) {
@@ -74,6 +79,7 @@ function DynamicImage(elemId, delay, widths, srcs, aspectRatio) {
             console.log("source change to " + src);
             elem.src = src;
             currentWidth = width;
+            updateHeight();
         }
     };
 
