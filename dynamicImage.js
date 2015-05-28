@@ -1,13 +1,13 @@
-// Dynamic Image version 2.4
+// Dynamic Image version 2.5
 
-function DynamicImage(elemId,elemWidth, delay, widths, srcs, aspectRatio) {
+function DynamicImage(elemId, elemWidth, delay, widths, srcs, aspectRatio) {
     elemWidth = elemWidth || '100%';
     delay = delay || 500; // half a second delay as default
     widths = widths || [];
     srcs = srcs || [];
     aspectRatio = aspectRatio || 1.8; // ratio 16/9
 
-    var elem = document.getElementById(elemId),
+    var elem = false,
         currentWidth = -1,
         image = this, // Minification optimization and reference clarification.
         win = window; // Minification optimization.
@@ -20,10 +20,24 @@ function DynamicImage(elemId,elemWidth, delay, widths, srcs, aspectRatio) {
         delayedUpdateFn();
     };
 
-    image.setSource = function(source, aRatio) {
+    image.setSource = function (source, aRatio) {
         srcs = [source];
-        widths = [1000000];  // just a very large width.
+        widths = [1000000]; // just a very large width.
         aspectRatio = aRatio || aspectRatio;
+    }
+
+    function ensureElement(fn) {
+        if (!elem) {
+            // initialization start
+            elem = document.getElementById(elemId);
+            if (elem) {
+                elem.style.width = elemWidth;
+                elem.src = "data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
+                updateHeight();
+            }
+            // initialization end
+        }
+        if (elem) fn();
     }
 
     function updateHeight() {
@@ -77,6 +91,10 @@ function DynamicImage(elemId,elemWidth, delay, widths, srcs, aspectRatio) {
         }
     }
 
+    function safeUpdate() {
+        ensureElement(update);
+    }
+
     function delayedCall(fn, ms) {
         var isBlocked = false;
 
@@ -93,7 +111,7 @@ function DynamicImage(elemId,elemWidth, delay, widths, srcs, aspectRatio) {
         };
     }
 
-    var delayedUpdateFn = delayedCall(update, delay);
+    var delayedUpdateFn = delayedCall(safeUpdate, delay);
 
     image.delayedUpdate = delayedUpdateFn;
 
@@ -109,10 +127,6 @@ function DynamicImage(elemId,elemWidth, delay, widths, srcs, aspectRatio) {
         win.onresize = callOldAndUpdate(win.onresize);
         win.onscroll = callOldAndUpdate(win.onscroll);
     };
-  
 
-    // --- creation preparations ----
-    elem.style.width = elemWidth;
-    elem.src = "data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
-    updateHeight();
+    ensureElement(function () {});
 }
