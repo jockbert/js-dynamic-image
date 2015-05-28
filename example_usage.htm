@@ -25,13 +25,18 @@
 	<p>2</p>
 	<p>1</p>
 
-	<img id="aPhoto"></img>
-	<img id="bPhoto"></img>
+	<img id="idA"></img>
+	<img id="idB"></img>
+	<img id="idC"></img>
+	<img id="idD"></img>
+	<img id="idE"></img>
+	
+	<p>Last image <i>(element id 'idF')</i> is just used as a delayed image loader.</p>
+	<img id="idF"></img>
 
 	<script>
-		var imageA = new DynamicImage("aPhoto");
-		imageA.setWidths(
-			[100,150,200,300,500,750,1000,1500,2000,3008],
+		var widths = [100,150,200,300,500,750,1000,1500,2000,3008]
+		var sources =
 			["photos/scaled_100.jpg",
 			"photos/scaled_150.jpg",
 			"photos/scaled_200.jpg",
@@ -41,24 +46,32 @@
 			"photos/scaled_1000.jpg",
 			"photos/scaled_1500.jpg",
 			"photos/scaled_2000.jpg",
-			"photos/original_3008.jpg"]);
+			"photos/original_3008.jpg"]
 
-		var imageB = new DynamicImage("bPhoto");
-		imageB.setWidths(
-			[100,150,200,300,500,750,1000,1500,2000,3008],
-			["photos/scaled_100.jpg",
-			"photos/scaled_150.jpg",
-			"photos/scaled_200.jpg",
-			"photos/scaled_300.jpg",
-			"photos/scaled_500.jpg",
-			"photos/scaled_750.jpg",
-			"photos/scaled_1000.jpg",
-			"photos/scaled_1500.jpg",
-			"photos/scaled_2000.jpg",
-			"photos/original_3008.jpg"]);
+		var imageA = new DynamicImage("idA");
+		imageA.setSources(widths, sources);
+
+		var imageB = new DynamicImage("idB", "50%");
+		imageB.setSources(widths, sources);
+
+		var imageC = new DynamicImage("idC", "25%");
+		imageC.setSources(widths, sources);
+
+		var imageD = new DynamicImage("idD", "13%");
+		imageD.setSources(widths, sources);
+
+		var imageE = new DynamicImage("idE", "6%");
+		imageE.setSources(widths, sources);
+
+		var imageF = new DynamicImage("idF","100px");
+		imageF.setSource("photos/scaled_100.jpg");
 
 		imageA.register();
 		imageB.register();
+		imageC.register();
+		imageD.register();
+		imageE.register();
+		imageF.register();
 	</script>
 </body>
 </html>

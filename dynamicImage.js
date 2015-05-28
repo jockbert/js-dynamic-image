@@ -1,9 +1,10 @@
 // Dynamic Image version 2.3
 
-function DynamicImage(elemId, delay, widths, srcs, aspectRatio) {
+function DynamicImage(elemId,elemWidth, delay, widths, srcs, aspectRatio) {
+    elemWidth = elemWidth || '100%';
+    delay = delay || 500; // half a second delay as default
     widths = widths || [];
     srcs = srcs || [];
-    delay = delay || 500; // half a second delay as default
     aspectRatio = aspectRatio || 1.8; // ratio 16/9
 
     var elem = document.getElementById(elemId),
@@ -11,13 +12,19 @@ function DynamicImage(elemId, delay, widths, srcs, aspectRatio) {
         image = this, // Minification optimization and reference clarification.
         win = window; // Minification optimization.
 
-    image.setWidths = function (ws, ss, aRatio) {
+    image.setSources = function (ws, ss, aRatio) {
         widths = ws;
         srcs = ss;
         aspectRatio = aRatio || aspectRatio;
         currentWidth = -1;
         delayedUpdateFn();
     };
+
+    image.setSource = function(source, aRatio) {
+        srcs = [source];
+        widths = [1000000];  // just a very large width.
+        aspectRatio = aRatio || aspectRatio;
+    }
 
     function updateHeight() {
         var height = currentWidth == -1 ? Math.round(elem.offsetWidth / aspectRatio) + 'px' : '100%';
@@ -105,7 +112,7 @@ function DynamicImage(elemId, delay, widths, srcs, aspectRatio) {
   
 
     // --- creation preparations ----
-    elem.style.width = '100%';
+    elem.style.width = elemWidth;
     elem.src = "data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
     updateHeight();
 }
