@@ -1,4 +1,4 @@
-// Dynamic Image version 2.3
+// Dynamic Image version 2.4
 
 function DynamicImage(elemId,elemWidth, delay, widths, srcs, aspectRatio) {
     elemWidth = elemWidth || '100%';
