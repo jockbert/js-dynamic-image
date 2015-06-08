@@ -1,6 +1,6 @@
-// Dynamic Image version 2.6
+// Dynamic Image version 2.7
 
-function DynamicImage(parentId, elemWidth, delay, widths, srcs, aspectRatio) {
+function DynamicImage(elemWidth, delay, widths, srcs, aspectRatio) {
     elemWidth = elemWidth || '100%';
     delay = delay || 500; // half a second delay as default
     widths = widths || [];
@@ -111,10 +111,6 @@ function DynamicImage(parentId, elemWidth, delay, widths, srcs, aspectRatio) {
     };
 
     function initialization() {
-        var parent = document.getElementById(parentId);
-        if (parent) {
-            parent.appendChild(elem);
-        }
         elem.style.width = elemWidth;
         elem.src = "data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
         elem.addEventListener("resize", delayedUpdateFn);
@@ -123,4 +119,12 @@ function DynamicImage(parentId, elemWidth, delay, widths, srcs, aspectRatio) {
     }
 
     initialization();
+
+    image.appendTo = function(parentId) {
+        var parent = document.getElementById(parentId);
+        if (parent) {
+            parent.appendChild(elem);
+        }
+        return image;
+    };
 }
