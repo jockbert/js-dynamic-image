@@ -1,4 +1,4 @@
-// Dynamic Image version 2.7
+// Dynamic Image version 2.8
 
 function DynamicImage(elemWidth, delay, widths, srcs, aspectRatio) {
     elemWidth = elemWidth || '100%';
@@ -97,30 +97,32 @@ function DynamicImage(elemWidth, delay, widths, srcs, aspectRatio) {
 
     image.delayedUpdate = delayedUpdateFn;
 
+    var delayedUpdateFn = delayedCall(update, delay);
+
+
+    var delayedLoadEventFn = delayedCall(function () {
+        update();
+        if (currentWidth != -1)
+            win.removeEventListener("scroll", image.delayedLoadEvent);
+    }, delay);
+
+    image.delayedLoadEvent = delayedLoadEventFn;
+
+
     image.register = function () {
-
-        function callOldAndUpdate(oldFn) {
-            return function () {
-                if (oldFn) oldFn();
-                delayedUpdateFn();
-            };
-        }
-
-        win.onresize = callOldAndUpdate(win.onresize);
-        win.onscroll = callOldAndUpdate(win.onscroll);
+        win.addEventListener("resize", delayedUpdateFn);
+        win.addEventListener("scroll", delayedLoadEventFn);
     };
 
     function initialization() {
         elem.style.width = elemWidth;
         elem.src = "data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
-        elem.addEventListener("resize", delayedUpdateFn);
         updateHeight();
-
     }
 
     initialization();
 
-    image.appendTo = function(parentId) {
+    image.appendTo = function (parentId) {
         var parent = document.getElementById(parentId);
         if (parent) {
             parent.appendChild(elem);
