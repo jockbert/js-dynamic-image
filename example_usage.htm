@@ -25,14 +25,11 @@
 	<p>2</p>
 	<p>1</p>
 
-	<img id="idA"></img>
-	<img id="idB"></img>
-	<img id="idC"></img>
-	<img id="idD"></img>
-	<img id="idE"></img>
-	
+	<div id="resizableArea"></div>
+
 	<p>Last image <i>(element id 'idF')</i> is just used as a delayed image loader.</p>
-	<img id="idF"></img>
+
+	<div id="thumbArea"></div>
 
 	<script>
 		var widths = [100,150,200,300,500,750,1000,1500,2000,3008]
@@ -48,22 +45,22 @@
 			"photos/scaled_2000.jpg",
 			"photos/original_3008.jpg"]
 
-		var imageA = new DynamicImage("idA");
+		var imageA = new DynamicImage("resizableArea");
 		imageA.setSources(widths, sources, 1.5);
 
-		var imageB = new DynamicImage("idB", "50%");
+		var imageB = new DynamicImage("resizableArea", "50%");
 		imageB.setSources(widths, sources, 1.5);
 
-		var imageC = new DynamicImage("idC", "25%");
+		var imageC = new DynamicImage("resizableArea", "25%");
 		imageC.setSources(widths, sources, 1.5);
 
-		var imageD = new DynamicImage("idD", "13%");
+		var imageD = new DynamicImage("resizableArea", "13%");
 		imageD.setSources(widths, sources, 0.5);
 
-		var imageE = new DynamicImage("idE", "6%");
+		var imageE = new DynamicImage("resizableArea", "6%");
 		imageE.setSources(widths, sources, 1.5);
 
-		var imageF = new DynamicImage("idF","100px");
+		var imageF = new DynamicImage("thumbArea","100px");
 		imageF.setSource("photos/scaled_100.jpg", 1.5);
 
 		imageA.register();

@@ -1,13 +1,13 @@
-// Dynamic Image version 2.5
+// Dynamic Image version 2.6
 
-function DynamicImage(elemId, elemWidth, delay, widths, srcs, aspectRatio) {
+function DynamicImage(parentId, elemWidth, delay, widths, srcs, aspectRatio) {
     elemWidth = elemWidth || '100%';
     delay = delay || 500; // half a second delay as default
     widths = widths || [];
     srcs = srcs || [];
     aspectRatio = aspectRatio || 1.8; // ratio 16/9
 
-    var elem = false,
+    var elem = document.createElement('img'),
         currentWidth = -1,
         image = this, // Minification optimization and reference clarification.
         win = window; // Minification optimization.
@@ -24,21 +24,7 @@ function DynamicImage(elemId, elemWidth, delay, widths, srcs, aspectRatio) {
         srcs = [source];
         widths = [1000000]; // just a very large width.
         aspectRatio = aRatio || aspectRatio;
-    }
-
-    function ensureElement(fn) {
-        if (!elem) {
-            // initialization start
-            elem = document.getElementById(elemId);
-            if (elem) {
-                elem.style.width = elemWidth;
-                elem.src = "data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
-                updateHeight();
-            }
-            // initialization end
-        }
-        if (elem) fn();
-    }
+    };
 
     function updateHeight() {
         var height = currentWidth == -1 ? Math.round(elem.offsetWidth / aspectRatio) + 'px' : '100%';
@@ -91,10 +77,6 @@ function DynamicImage(elemId, elemWidth, delay, widths, srcs, aspectRatio) {
         }
     }
 
-    function safeUpdate() {
-        ensureElement(update);
-    }
-
     function delayedCall(fn, ms) {
         var isBlocked = false;
 
@@ -111,7 +93,7 @@ function DynamicImage(elemId, elemWidth, delay, widths, srcs, aspectRatio) {
         };
     }
 
-    var delayedUpdateFn = delayedCall(safeUpdate, delay);
+    var delayedUpdateFn = delayedCall(update, delay);
 
     image.delayedUpdate = delayedUpdateFn;
 
@@ -128,5 +110,17 @@ function DynamicImage(elemId, elemWidth, delay, widths, srcs, aspectRatio) {
         win.onscroll = callOldAndUpdate(win.onscroll);
     };
 
-    ensureElement(function () {});
+    function initialization() {
+        var parent = document.getElementById(parentId);
+        if (parent) {
+            parent.appendChild(elem);
+        }
+        elem.style.width = elemWidth;
+        elem.src = "data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
+        elem.addEventListener("resize", delayedUpdateFn);
+        updateHeight();
+
+    }
+
+    initialization();
 }
