@@ -1,4 +1,4 @@
-// Dynamic Image version 2.8
+// Dynamic Image version 2.9
 
 function DynamicImage(elemWidth, delay, widths, srcs, aspectRatio) {
     elemWidth = elemWidth || '100%';
@@ -16,14 +16,14 @@ function DynamicImage(elemWidth, delay, widths, srcs, aspectRatio) {
         widths = ws;
         srcs = ss;
         aspectRatio = aRatio || aspectRatio;
-        currentWidth = -1;
-        delayedUpdateFn();
+        initialization();
     };
 
     image.setSource = function (source, aRatio) {
         srcs = [source];
         widths = [1000000]; // just a very large width.
         aspectRatio = aRatio || aspectRatio;
+        initialization();
     };
 
     function updateHeight() {
@@ -93,31 +93,32 @@ function DynamicImage(elemWidth, delay, widths, srcs, aspectRatio) {
         };
     }
 
-    var delayedUpdateFn = delayedCall(update, delay);
-
-    image.delayedUpdate = delayedUpdateFn;
-
-    var delayedUpdateFn = delayedCall(update, delay);
-
-
-    var delayedLoadEventFn = delayedCall(function () {
+    image.resizeImageEvent = delayedCall(function () {
         update();
-        if (currentWidth != -1)
-            win.removeEventListener("scroll", image.delayedLoadEvent);
+        var lastWidth = widths[widths.length -1];
+        var isLargestImage = currentWidth == lastWidth;
+        if(isLargestImage)
+            win.removeEventListener("resize", image.resizeImageEvent);
     }, delay);
 
-    image.delayedLoadEvent = delayedLoadEventFn;
+    image.loadImageEvent = delayedCall(function () {
+        update();
+        if (currentWidth != -1)
+            win.removeEventListener("scroll", image.loadImageEvent);
+    }, delay);
 
-
+    /** Registers resizeImageEvent and loadImageEvent to events
+    window.resize and window.scroll respectively. */
     image.register = function () {
-        win.addEventListener("resize", delayedUpdateFn);
-        win.addEventListener("scroll", delayedLoadEventFn);
+        win.addEventListener("resize", image.resizeImageEvent);
+        win.addEventListener("scroll", image.loadImageEvent);
     };
 
     function initialization() {
+        currentWidth = -1;
         elem.style.width = elemWidth;
         elem.src = "data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
-        updateHeight();
+        update();
     }
 
     initialization();
