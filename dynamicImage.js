@@ -1,4 +1,4 @@
-// Dynamic Image version 2.10
+// Dynamic Image version 2.11
 
 function DynamicImage(elemWidth, delay, widths, srcs) {
     delay = delay || 500; // half a second delay as default
@@ -139,36 +139,25 @@ function DynamicImage(elemWidth, delay, widths, srcs) {
         };
     }
 
-    image.appendTo = returnImage(
-        function (parentId) {
-            var parent = document.getElementById(parentId);
-            if (parent) {
-                parent.appendChild(elem);
-            }
-        }
-    );
+    image.appendTo = returnImage(function (parentId) {
+        var parent = document.getElementById(parentId);
+        if (parent) parent.appendChild(elem);
+    });
 
-    image.width = returnImage(
-        function (width) {
-            setChanged(elem.style,"width", width);
-            update();
-        }
-    );
+    image.width = returnImage(function (width) {
+        setChanged(elem.style, "width", width);
+    });
 
-    image.height = returnImage(
-        function (height) {
-            elemHeightFn = constantFn(height);
-            update();
-        }
-    );
+    image.height = returnImage(function (height) {
+        elemHeightFn = constantFn(height);
+    });
 
-    image.heightAsPixelRatioOfWidth = returnImage(
-        function (ratio) {
-            elemHeightFn = function () {
-                var height = Math.round(elem.offsetWidth * ratio);
-                return height + 'px';
-            };
-            update();
-        }
-    );
+    image.heightAsPixelRatioOfWidth = returnImage(function (ratio) {
+        elemHeightFn = function () {
+            var height = Math.round(elem.offsetWidth * ratio);
+            return height + 'px';
+        };
+    });
+
+    image.update = returnImage(update);
 }

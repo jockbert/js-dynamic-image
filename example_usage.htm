@@ -66,13 +66,47 @@
         var imageF = new DynamicImage();
         imageF.setSource("photos/scaled_100.jpg", 1.5);
 
-        imageA.appendTo("resizableArea").width('40vw').height('30vw').register();
-        imageB.appendTo("resizableArea").width('25%').heightAsPixelRatioOfWidth(0.75).register();
-        imageC.appendTo("resizableArea").width('12vw').height('9vw').register();
-        imageD.appendTo("resizableArea").width('8vw').height('6vw').register();
-        imageE.appendTo("resizableArea").width('4vw').height('3vw').register();
+        imageA
+            .appendTo("resizableArea")
+            .width('40vw')
+            .height('30vw')
+            .update()
+            .register();
 
-        imageF.appendTo("thumbArea").width('100px').height('75px').register();
+        imageB
+            .appendTo("resizableArea")
+            .width('25%')
+            .heightAsPixelRatioOfWidth(0.75)
+            .update()
+            .register();
+
+        imageC
+            .appendTo("resizableArea")
+            .width('12vw')
+            .height('9vw')
+            .update()
+            .register();
+
+        imageD
+            .appendTo("resizableArea")
+            .width('8vw')
+            .height('6vw')
+            .update()
+            .register();
+
+        imageE
+            .appendTo("resizableArea")
+            .width('4vw')
+            .height('3vw')
+            .update()
+            .register();
+
+        imageF
+            .appendTo("thumbArea")
+            .width('100px')
+            .height('75px')
+            .update()
+            .register();
     </script>
 </body>
 
