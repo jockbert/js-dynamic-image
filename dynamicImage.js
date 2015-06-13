@@ -77,6 +77,15 @@ function DynamicImage(elemWidth, delay, widths, srcs, aspectRatio) {
         }
     }
 
+    function initialization() {
+        currentWidth = -1;
+        elem.style.width = elemWidth;
+        elem.src = "data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
+        update();
+    }
+
+    initialization();
+
     function delayedCall(fn, ms) {
         var isBlocked = false;
 
@@ -95,15 +104,16 @@ function DynamicImage(elemWidth, delay, widths, srcs, aspectRatio) {
 
     image.resizeImageEvent = delayedCall(function () {
         update();
-        var lastWidth = widths[widths.length -1];
+        var lastWidth = widths[widths.length - 1];
         var isLargestImage = currentWidth == lastWidth;
-        if(isLargestImage)
+        if (isLargestImage)
             win.removeEventListener("resize", image.resizeImageEvent);
     }, delay);
 
     image.loadImageEvent = delayedCall(function () {
         update();
-        if (currentWidth != -1)
+        var isGrayPlaceholderImage = currentWidth != -1;
+        if (isGrayPlaceholderImage)
             win.removeEventListener("scroll", image.loadImageEvent);
     }, delay);
 
@@ -113,15 +123,6 @@ function DynamicImage(elemWidth, delay, widths, srcs, aspectRatio) {
         win.addEventListener("resize", image.resizeImageEvent);
         win.addEventListener("scroll", image.loadImageEvent);
     };
-
-    function initialization() {
-        currentWidth = -1;
-        elem.style.width = elemWidth;
-        elem.src = "data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
-        update();
-    }
-
-    initialization();
 
     image.appendTo = function (parentId) {
         var parent = document.getElementById(parentId);
