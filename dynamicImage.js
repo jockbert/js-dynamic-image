@@ -1,4 +1,4 @@
-// Dynamic Image version 2.11
+// Dynamic Image version 2.12
 
 function DynamicImage(elemWidth, delay, widths, srcs) {
     delay = delay || 500; // half a second delay as default
@@ -127,10 +127,12 @@ function DynamicImage(elemWidth, delay, widths, srcs) {
 
     /** Registers resizeImageEvent and loadImageEvent to events
     window.resize and window.scroll respectively. */
-    image.register = function () {
+    function registerToWindow () {
         win.addEventListener("resize", image.resizeImageEvent);
         win.addEventListener("scroll", image.loadImageEvent);
     };
+
+    registerToWindow();
 
     function returnImage(innerFn) {
         return function (argument) {
