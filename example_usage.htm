@@ -51,27 +51,28 @@
         var imageA = new DynamicImage();
         imageA.setSources(widths, sources, 1.5);
 
-        var imageB = new DynamicImage("50%");
+        var imageB = new DynamicImage();
         imageB.setSources(widths, sources, 1.5);
 
-        var imageC = new DynamicImage("25%");
+        var imageC = new DynamicImage();
         imageC.setSources(widths, sources, 1.5);
 
-        var imageD = new DynamicImage("13%");
+        var imageD = new DynamicImage();
         imageD.setSources(widths, sources, 0.5);
 
-        var imageE = new DynamicImage("6%");
+        var imageE = new DynamicImage();
         imageE.setSources(widths, sources, 1.5);
 
-        var imageF = new DynamicImage("100px");
+        var imageF = new DynamicImage();
         imageF.setSource("photos/scaled_100.jpg", 1.5);
 
-        imageA.appendTo("resizableArea").register();
-        imageB.appendTo("resizableArea").register();
-        imageC.appendTo("resizableArea").register();
-        imageD.appendTo("resizableArea").register();
-        imageE.appendTo("resizableArea").register();
-        imageF.appendTo("thumbArea").register();
+        imageA.appendTo("resizableArea").width('40vw').height('30vw').register();
+        imageB.appendTo("resizableArea").width('25%').heightAsPixelRatioOfWidth(0.75).register();
+        imageC.appendTo("resizableArea").width('12vw').height('9vw').register();
+        imageD.appendTo("resizableArea").width('8vw').height('6vw').register();
+        imageE.appendTo("resizableArea").width('4vw').height('3vw').register();
+
+        imageF.appendTo("thumbArea").width('100px').height('75px').register();
     </script>
 </body>
 

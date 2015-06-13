@@ -1,36 +1,46 @@
-// Dynamic Image version 2.9
+// Dynamic Image version 2.10
 
-function DynamicImage(elemWidth, delay, widths, srcs, aspectRatio) {
-    elemWidth = elemWidth || '100%';
+function DynamicImage(elemWidth, delay, widths, srcs) {
     delay = delay || 500; // half a second delay as default
     widths = widths || [];
     srcs = srcs || [];
-    aspectRatio = aspectRatio || 1.8; // ratio 16/9
 
     var elem = document.createElement('img'),
         currentWidth = -1,
         image = this, // Minification optimization and reference clarification.
-        win = window; // Minification optimization.
+        win = window, // Minification optimization.
 
-    image.setSources = function (ws, ss, aRatio) {
+        elemHeightFn = constantFn('100%');
+
+    image.setSources = function (ws, ss) {
         widths = ws;
         srcs = ss;
-        aspectRatio = aRatio || aspectRatio;
         initialization();
     };
 
-    image.setSource = function (source, aRatio) {
+    image.setSource = function (source) {
         srcs = [source];
         widths = [1000000]; // just a very large width.
-        aspectRatio = aRatio || aspectRatio;
         initialization();
     };
 
+    function isGrayPlaceholderImage() {
+        return currentWidth == -1;
+    }
+
+    function constantFn(constant) {
+        return function () {
+            return constant;
+        };
+    }
+
+    function setChanged(object, parameter, value) {
+        if (object[parameter] != value)
+            object[parameter] = value;
+    }
+
     function updateHeight() {
-        var height = currentWidth == -1 ? Math.round(elem.offsetWidth / aspectRatio) + 'px' : '100%';
-        if (elem.style.height != height) {
-            elem.style.height = height;
-        }
+        setChanged(elem.style, "height", elemHeightFn());
     }
 
     function isElementInViewport(el) {
@@ -79,7 +89,6 @@ function DynamicImage(elemWidth, delay, widths, srcs, aspectRatio) {
 
     function initialization() {
         currentWidth = -1;
-        elem.style.width = elemWidth;
         elem.src = "data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
         update();
     }
@@ -112,8 +121,7 @@ function DynamicImage(elemWidth, delay, widths, srcs, aspectRatio) {
 
     image.loadImageEvent = delayedCall(function () {
         update();
-        var isGrayPlaceholderImage = currentWidth != -1;
-        if (isGrayPlaceholderImage)
+        if (!isGrayPlaceholderImage())
             win.removeEventListener("scroll", image.loadImageEvent);
     }, delay);
 
@@ -124,11 +132,43 @@ function DynamicImage(elemWidth, delay, widths, srcs, aspectRatio) {
         win.addEventListener("scroll", image.loadImageEvent);
     };
 
-    image.appendTo = function (parentId) {
-        var parent = document.getElementById(parentId);
-        if (parent) {
-            parent.appendChild(elem);
+    function returnImage(innerFn) {
+        return function (argument) {
+            innerFn(argument);
+            return image;
+        };
+    }
+
+    image.appendTo = returnImage(
+        function (parentId) {
+            var parent = document.getElementById(parentId);
+            if (parent) {
+                parent.appendChild(elem);
+            }
         }
-        return image;
-    };
+    );
+
+    image.width = returnImage(
+        function (width) {
+            setChanged(elem.style,"width", width);
+            update();
+        }
+    );
+
+    image.height = returnImage(
+        function (height) {
+            elemHeightFn = constantFn(height);
+            update();
+        }
+    );
+
+    image.heightAsPixelRatioOfWidth = returnImage(
+        function (ratio) {
+            elemHeightFn = function () {
+                var height = Math.round(elem.offsetWidth * ratio);
+                return height + 'px';
+            };
+            update();
+        }
+    );
 }
