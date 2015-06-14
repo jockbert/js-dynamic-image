@@ -11,21 +11,39 @@ function DynamicImage(delay) {
         elemHeightFn = constantFn('100%'),
         srcs = [];
 
+    // ------------ Generic Helpers -----------------
+
+    /* Generate a function that returns a constant value. */
     function constantFn(constant) {
         return function () {
             return constant;
         };
     }
 
-    function setChanged(object, parameter, value) {
+    /* Delays a function call and blocks consecutive calls during delay. */
+    function delayedCall(fn, ms) {
+        var isBlocked = false;
+
+        function clearBlock() {
+            isBlocked = false;
+            fn();
+        }
+
+        return function () {
+            if (!isBlocked) {
+                isBlocked = true;
+                win.setTimeout(clearBlock, ms);
+            }
+        };
+    }
+
+    /* Set object parameter value only if it leads to a change of value. */
+    function setIfChanged(object, parameter, value) {
         if (object[parameter] != value)
             object[parameter] = value;
     }
 
-    function updateHeight() {
-        setChanged(elem.style, "height", elemHeightFn());
-    }
-
+    /* Determines whether DOM element is in browser viewport. */
     function isElementInViewport(el) {
         var top = el.offsetTop,
             left = el.offsetLeft,
@@ -46,6 +64,25 @@ function DynamicImage(delay) {
             (top + height) > pageYOffset &&
             (left + width) > pageXOffset
         );
+    }
+
+    /* Register a event listener function and a predicate for when to unregister. */
+    function addListener(obj, eventType, eventFn, unregPred) {
+        unregPred = unregPred || constantFn(false);
+
+        function wrappedFn() {
+            eventFn();
+            if (unregPred())
+                obj.removeEventListener(eventType, wrappedFn);
+        }
+
+        obj.addEventListener(eventType, wrappedFn);
+    }
+
+    // ------------ Inner Workings -----------------
+
+    function updateHeight() {
+        setIfChanged(elem.style, "height", elemHeightFn());
     }
 
     function update() {
@@ -71,34 +108,6 @@ function DynamicImage(delay) {
         currentWidth = -1;
         elem.src = "data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
         update();
-    }
-
-    function delayedCall(fn, ms) {
-        var isBlocked = false;
-
-        function clearBlock() {
-            isBlocked = false;
-            fn();
-        }
-
-        return function () {
-            if (!isBlocked) {
-                isBlocked = true;
-                win.setTimeout(clearBlock, ms);
-            }
-        };
-    }
-
-    function addListener(obj, eventType, eventFn, unregPred) {
-        unregPred = unregPred || constantFn(false);
-
-        function wrappedFn() {
-            eventFn();
-            if (unregPred())
-                obj.removeEventListener(eventType, wrappedFn);
-        }
-
-        obj.addEventListener(eventType, wrappedFn);
     }
 
     function isLargestImage() {
@@ -138,7 +147,7 @@ function DynamicImage(delay) {
 
     /* Set width of image as a CSS-width. */
     image.width = returnImage(function (width) {
-        setChanged(elem.style, "width", width);
+        setIfChanged(elem.style, "width", width);
     });
 
     /* Set height of image as a CSS-height. */
