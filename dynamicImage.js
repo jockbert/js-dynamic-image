@@ -73,8 +73,6 @@ function DynamicImage(delay) {
         update();
     }
 
-    initialization();
-
     function delayedCall(fn, ms) {
         var isBlocked = false;
 
@@ -120,8 +118,6 @@ function DynamicImage(delay) {
         addListener(win, "resize", delayedUpdate, isLargestImage);
     }
 
-    registerToWindow();
-
     function returnImage(innerFn) {
         return function (argument) {
             innerFn(argument);
@@ -129,19 +125,29 @@ function DynamicImage(delay) {
         };
     }
 
+    registerToWindow();
+    initialization();
+
+    // ------------ Public interface -----------------
+
+    /* Append this element to other DOM element with id 'parentId'. */
     image.appendTo = returnImage(function (parentId) {
         var parent = document.getElementById(parentId);
         if (parent) parent.appendChild(elem);
     });
 
+    /* Set width of image as a CSS-width. */
     image.width = returnImage(function (width) {
         setChanged(elem.style, "width", width);
     });
 
+    /* Set height of image as a CSS-height. */
     image.height = returnImage(function (height) {
         elemHeightFn = constantFn(height);
     });
 
+    /* Set height of image as a ratio of the actual pixel
+    width of the image. The height is updated via event triggered JS. */
     image.heightAsPixelRatioOfWidth = returnImage(function (ratio) {
         elemHeightFn = function () {
             var height = Math.round(elem.offsetWidth * ratio);
@@ -149,15 +155,23 @@ function DynamicImage(delay) {
         };
     });
 
+    /* Trigger an update of the image. This can change height and the
+    currently used image resource among other things. */
     image.update = returnImage(update);
 
+    /* Set a list of sources to use. Each list element should be
+    an object of the format {width: <pixels>, src: <url>} . */
     image.sources = returnImage(function (ss) {
         srcs = ss;
         initialization();
     });
 
+    /* Set a singel image source to use. */
     image.singleSource = returnImage(function (source) {
-        srcs = [{width:100000, src:source}]; // just a very large width.
+        srcs = [{
+            width: 100000, // just a very large width.
+            src: source
+        }];
         initialization();
     });
 }
