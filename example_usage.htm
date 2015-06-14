@@ -48,55 +48,43 @@
                        "photos/scaled_2000.jpg",
                        "photos/original_3008.jpg"];
 
-        var imageA = new DynamicImage();
-        imageA.setSources(widths, sources, 1.5);
-
-        var imageB = new DynamicImage(100);
-        imageB.setSources(widths, sources, 1.5);
-
-        var imageC = new DynamicImage();
-        imageC.setSources(widths, sources, 1.5);
-
-        var imageD = new DynamicImage();
-        imageD.setSources(widths, sources, 0.5);
-
-        var imageE = new DynamicImage();
-        imageE.setSources(widths, sources, 1.5);
-
-        var imageF = new DynamicImage();
-        imageF.setSource("photos/scaled_100.jpg", 1.5);
-
-        imageA
+        new DynamicImage()
+            .setSources(widths, sources)
             .appendTo("resizableArea")
             .width('40vw')
             .height('30vw')
             .update();
 
-        imageB
+        new DynamicImage(100)
+            .setSources(widths, sources)
             .appendTo("resizableArea")
             .width('25%')
             .heightAsPixelRatioOfWidth(0.75)
             .update();
 
-        imageC
+        new DynamicImage()
+            .setSources(widths, sources)
             .appendTo("resizableArea")
             .width('12vw')
             .height('9vw')
             .update();
 
-        imageD
+        new DynamicImage()
+            .setSources(widths, sources)
             .appendTo("resizableArea")
             .width('8vw')
             .height('6vw')
             .update();
 
-        imageE
+        new DynamicImage()
+            .setSources(widths, sources)
             .appendTo("resizableArea")
             .width('4vw')
             .height('3vw')
             .update();
 
-        imageF
+        new DynamicImage()
+            .setSource("photos/scaled_100.jpg")
             .appendTo("thumbArea")
             .width('100px')
             .height('75px')

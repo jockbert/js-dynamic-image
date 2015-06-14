@@ -1,4 +1,4 @@
-// Dynamic Image version 3.0
+// Dynamic Image version 3.1
 
 function DynamicImage(delay) {
     delay = delay || 500; // half a second delay as default
@@ -12,17 +12,6 @@ function DynamicImage(delay) {
         widths = [],
         srcs = [];
 
-    image.setSources = function (ws, ss) {
-        widths = ws;
-        srcs = ss;
-        initialization();
-    };
-
-    image.setSource = function (source) {
-        srcs = [source];
-        widths = [1000000]; // just a very large width.
-        initialization();
-    };
 
     function isGrayPlaceholderImage() {
         return currentWidth == -1;
@@ -145,8 +134,8 @@ function DynamicImage(delay) {
     registerToWindow();
 
     function returnImage(innerFn) {
-        return function (argument) {
-            innerFn(argument);
+        return function (argument,a2) {
+            innerFn(argument,a2);
             return image;
         };
     }
@@ -172,4 +161,16 @@ function DynamicImage(delay) {
     });
 
     image.update = returnImage(update);
+
+    image.setSources = returnImage(function (ws, ss) {
+        widths = ws;
+        srcs = ss;
+        initialization();
+    });
+
+    image.setSource = returnImage(function (source) {
+        srcs = [source];
+        widths = [1000000]; // just a very large width.
+        initialization();
+    });
 }
