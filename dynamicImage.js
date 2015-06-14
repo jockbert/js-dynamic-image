@@ -1,4 +1,4 @@
-// Dynamic Image version 3.1
+// Dynamic Image version 3.2
 
 function DynamicImage(delay) {
     delay = delay || 500; // half a second delay as default
@@ -9,7 +9,6 @@ function DynamicImage(delay) {
         win = window, // Minification optimization.
 
         elemHeightFn = constantFn('100%'),
-        widths = [],
         srcs = [];
 
 
@@ -61,17 +60,14 @@ function DynamicImage(delay) {
         var elemWidth = elem.offsetWidth;
         if (currentWidth >= elemWidth) return;
 
-        var src = srcs[0];
-        var width = widths[0];
+        var srcObj = srcs[0];
 
-        for (var i = 1; i < widths.length && widths[i - 1] < elemWidth; ++i) {
-            src = srcs[i];
-            width = widths[i];
-        }
+        for (var i = 1; i < srcs.length && srcs[i - 1].width < elemWidth; ++i)
+            srcObj = srcs[i];
 
-        if (width > currentWidth) {
-            elem.src = src;
-            currentWidth = width;
+        if (srcObj.width > currentWidth) {
+            elem.src = srcObj.src;
+            currentWidth = srcObj.width;
             updateHeight();
         }
     }
@@ -101,7 +97,7 @@ function DynamicImage(delay) {
     }
 
     function isLargestImage() {
-        var lastWidth = widths[widths.length - 1];
+        var lastWidth = srcs[srcs.length - 1].width;
         return currentWidth == lastWidth;
     }
 
@@ -134,8 +130,8 @@ function DynamicImage(delay) {
     registerToWindow();
 
     function returnImage(innerFn) {
-        return function (argument,a2) {
-            innerFn(argument,a2);
+        return function (argument) {
+            innerFn(argument);
             return image;
         };
     }
@@ -162,15 +158,13 @@ function DynamicImage(delay) {
 
     image.update = returnImage(update);
 
-    image.setSources = returnImage(function (ws, ss) {
-        widths = ws;
+    image.sources = returnImage(function (ss) {
         srcs = ss;
         initialization();
     });
 
-    image.setSource = returnImage(function (source) {
-        srcs = [source];
-        widths = [1000000]; // just a very large width.
+    image.singleSource = returnImage(function (source) {
+        srcs = [{width:100000, src:source}]; // just a very large width.
         initialization();
     });
 }
