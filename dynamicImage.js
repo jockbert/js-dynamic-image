@@ -111,26 +111,36 @@ function DynamicImage(elemWidth, delay, widths, srcs) {
         };
     }
 
-    image.resizeImageEvent = delayedCall(function () {
-        update();
+    function isLargestImage() {
         var lastWidth = widths[widths.length - 1];
-        var isLargestImage = currentWidth == lastWidth;
-        if (isLargestImage)
-            win.removeEventListener("resize", image.resizeImageEvent);
-    }, delay);
+        return currentWidth == lastWidth;
+    }
 
-    image.loadImageEvent = delayedCall(function () {
-        update();
-        if (!isGrayPlaceholderImage())
-            win.removeEventListener("scroll", image.loadImageEvent);
-    }, delay);
+    function not(fn) {
+        return function () {
+            return !fn();
+        };
+    }
+
+    function addListener(obj, eventType, eventFn, unregPred) {
+        unregPred = unregPred || constantFn(false);
+
+        function wrappedFn() {
+            eventFn();
+            if (unregPred())
+                obj.removeEventListener(eventType, wrappedFn);
+        }
+
+        obj.addEventListener(eventType, wrappedFn);
+    }
 
     /** Registers resizeImageEvent and loadImageEvent to events
     window.resize and window.scroll respectively. */
-    function registerToWindow () {
-        win.addEventListener("resize", image.resizeImageEvent);
-        win.addEventListener("scroll", image.loadImageEvent);
-    };
+    function registerToWindow() {
+        var delayedUpdate = delayedCall(update, delay);
+        addListener(win, "scroll", delayedUpdate, not(isGrayPlaceholderImage));
+        addListener(win, "resize", delayedUpdate, isLargestImage);
+    }
 
     registerToWindow();
 
