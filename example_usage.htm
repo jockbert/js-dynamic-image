@@ -5,47 +5,53 @@
     <meta charset="utf-8">
     <script src="dynamicImage.min.js"></script>
     <style>
-        p {
-            font-size: 3em;
-            margin-bottom: 2em;
+        div.viewBlocker {
+            min-height: 110vh
         }
     </style>
 </head>
 
 <body>
-    <p>Scroll down!</p>
-
-    <p>The image is out of view and is not yet loaded. It will load as soon as it in view.</p>
-
-    <p>Countdown ...</p>
-    <p>10</p>
-    <p>9</p>
-    <p>8</p>
-    <p>7</p>
-    <p>6</p>
-    <p>5</p>
-    <p>4</p>
-    <p>3</p>
-    <p>2</p>
-    <p>1</p>
+    <div class="viewBlocker">
+        <p>Scroll down!</p>
+        <p>The images is out of view and is therefor not yet loaded. They will load as soon as they are in view.</p>
+        <p>These images has a width relative to the page width. Every image has multiple resolution source alternatives and the most suitable version is automatically loaded when page width is changed. More precisely, a version of the image with higher resolution is loaded when page width and thereby also the image width is enlarged.</p>
+    </div>
 
     <div id="resizableArea"></div>
 
-    <p>Last image <i>(element id 'idF')</i> is just used as a delayed image loader.</p>
-
-    <div id="thumbArea"></div>
-
     <script>
-        var sources = [{width:100, src:"photos/scaled_100.jpg"},
-                       {width:150, src:"photos/scaled_150.jpg"},
-                       {width:200, src:"photos/scaled_200.jpg"},
-                       {width:300, src:"photos/scaled_300.jpg"},
-                       {width:500, src:"photos/scaled_500.jpg"},
-                       {width:750, src:"photos/scaled_750.jpg"},
-                       {width:1000, src:"photos/scaled_1000.jpg"},
-                       {width:1500, src:"photos/scaled_1500.jpg"},
-                       {width:2000, src:"photos/scaled_2000.jpg"},
-                       {width:3008, src:"photos/original_3008.jpg"}];
+        var sources = [{
+            width: 100,
+            src: "photos/scaled_100.jpg"
+            }, {
+            width: 150,
+            src: "photos/scaled_150.jpg"
+            }, {
+            width: 200,
+            src: "photos/scaled_200.jpg"
+            }, {
+            width: 300,
+            src: "photos/scaled_300.jpg"
+            }, {
+            width: 500,
+            src: "photos/scaled_500.jpg"
+            }, {
+            width: 750,
+            src: "photos/scaled_750.jpg"
+            }, {
+            width: 1000,
+            src: "photos/scaled_1000.jpg"
+            }, {
+            width: 1500,
+            src: "photos/scaled_1500.jpg"
+            }, {
+            width: 2000,
+            src: "photos/scaled_2000.jpg"
+            }, {
+            width: 3008,
+            src: "photos/original_3008.jpg"
+        }];
 
         new DynamicImage()
             .sources(sources)
@@ -81,7 +87,17 @@
             .width('4vw')
             .height('3vw')
             .update();
+    </script>
 
+    <hr>
+
+    <div class="viewBlocker">
+        <p>Last image has a fixed size and is just used as a lazy image loader. No resolution alternatives are used. A usage scenario could be delayed loading of images or thumbnails in a large web page.</p>
+    </div>
+
+    <div id="thumbArea"></div>
+
+    <script>
         new DynamicImage()
             .singleSource("photos/scaled_100.jpg")
             .appendTo("thumbArea")
