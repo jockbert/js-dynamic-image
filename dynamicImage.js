@@ -11,11 +11,6 @@ function DynamicImage(delay) {
         elemHeightFn = constantFn('100%'),
         srcs = [];
 
-
-    function isGrayPlaceholderImage() {
-        return currentWidth == -1;
-    }
-
     function constantFn(constant) {
         return function () {
             return constant;
@@ -96,17 +91,6 @@ function DynamicImage(delay) {
         };
     }
 
-    function isLargestImage() {
-        var lastWidth = srcs[srcs.length - 1].width;
-        return currentWidth == lastWidth;
-    }
-
-    function not(fn) {
-        return function () {
-            return !fn();
-        };
-    }
-
     function addListener(obj, eventType, eventFn, unregPred) {
         unregPred = unregPred || constantFn(false);
 
@@ -119,11 +103,20 @@ function DynamicImage(delay) {
         obj.addEventListener(eventType, wrappedFn);
     }
 
+    function isLargestImage() {
+        var lastWidth = srcs[srcs.length - 1].width;
+        return currentWidth == lastWidth;
+    }
+
+    function isImageLoaded() {
+        return currentWidth != -1;
+    }
+
     /** Registers resizeImageEvent and loadImageEvent to events
     window.resize and window.scroll respectively. */
     function registerToWindow() {
         var delayedUpdate = delayedCall(update, delay);
-        addListener(win, "scroll", delayedUpdate, not(isGrayPlaceholderImage));
+        addListener(win, "scroll", delayedUpdate, isImageLoaded);
         addListener(win, "resize", delayedUpdate, isLargestImage);
     }
 
