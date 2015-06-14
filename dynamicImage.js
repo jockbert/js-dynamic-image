@@ -1,16 +1,16 @@
-// Dynamic Image version 2.12
+// Dynamic Image version 3.0
 
-function DynamicImage(elemWidth, delay, widths, srcs) {
+function DynamicImage(delay) {
     delay = delay || 500; // half a second delay as default
-    widths = widths || [];
-    srcs = srcs || [];
 
     var elem = document.createElement('img'),
         currentWidth = -1,
         image = this, // Minification optimization and reference clarification.
         win = window, // Minification optimization.
 
-        elemHeightFn = constantFn('100%');
+        elemHeightFn = constantFn('100%'),
+        widths = [],
+        srcs = [];
 
     image.setSources = function (ws, ss) {
         widths = ws;
