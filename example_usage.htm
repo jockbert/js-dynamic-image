@@ -92,7 +92,9 @@
     <hr>
 
     <div class="viewBlocker">
-        <p>Last image has a fixed size and is just used as a lazy image loader. No resolution alternatives are used. A usage scenario could be delayed loading of images or thumbnails in a large web page.</p>
+        <p>Last images have a fixed size and is just used as a lazy image loader. No resolution alternatives are used. A usage scenario could be delayed loading of images or thumbnails in a large web page.</p>
+
+        <p>It is possible to obtain the image element created by a DynamicImage instance, for further image manipulation. Try clicking the rotated image.</p>
     </div>
 
     <div id="thumbArea"></div>
@@ -104,6 +106,24 @@
             .width('100px')
             .height('75px')
             .update();
+
+        var di = new DynamicImage()
+            .singleSource("photos/scaled_100.jpg")
+            .width('100px')
+            .height('75px');
+
+         // alternative way to add image
+        var elem = di.getElement();
+        var parent = document.getElementById("thumbArea");
+        parent.appendChild(elem);
+
+         // further manipulation
+        elem.onclick = function () {
+            alert("clicked");
+        };
+
+        elem.style.padding = "2em";
+        elem.style.transform = "rotate(40deg)";
     </script>
 </body>
 

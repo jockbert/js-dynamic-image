@@ -1,4 +1,4 @@
-// Dynamic Image version 3.2
+// Dynamic Image version 3.3
 
 function DynamicImage(delay) {
     delay = delay || 500; // half a second delay as default
@@ -183,4 +183,9 @@ function DynamicImage(delay) {
         }];
         initialization();
     });
+
+    /* Return the image HTML element manipulated by DynamicImage. */
+    image.getElement = function() {
+        return elem;
+    };
 }
