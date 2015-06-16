@@ -111,6 +111,7 @@ function DynamicImage(delay) {
     }
 
     function isLargestImage() {
+        if(srcs.length == 0) return false;
         var lastWidth = srcs[srcs.length - 1].width;
         return currentWidth == lastWidth;
     }
