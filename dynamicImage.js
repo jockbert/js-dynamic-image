@@ -1,4 +1,4 @@
-// Dynamic Image version 3.3
+// Dynamic Image version 3.4
 
 function DynamicImage(delay) {
     delay = delay || 500; // half a second delay as default
@@ -66,8 +66,11 @@ function DynamicImage(delay) {
         );
     }
 
-    /* Register a event listener function and a predicate for when to unregister. */
-    function addListener(obj, eventType, eventFn, unregPred) {
+    /* Object to keep track of registered listener for later re-addition
+    and single removal. It uses the same listener function for multiple
+    calls to addEventListener(), which in it's turn ignores possible
+    duplicate registrations. */
+    function AutomaticRemovalListener(obj, eventType, eventFn, unregPred) {
         unregPred = unregPred || constantFn(false);
 
         function wrappedFn() {
@@ -76,7 +79,9 @@ function DynamicImage(delay) {
                 obj.removeEventListener(eventType, wrappedFn);
         }
 
-        obj.addEventListener(eventType, wrappedFn);
+        this.register = function () {
+            obj.addEventListener(eventType, wrappedFn);
+        }
     }
 
     // ------------ Inner Workings -----------------
@@ -104,14 +109,8 @@ function DynamicImage(delay) {
         }
     }
 
-    function initialization() {
-        currentWidth = -1;
-        elem.src = "data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
-        update();
-    }
-
     function isLargestImage() {
-        if(srcs.length == 0) return false;
+        if (srcs.length == 0) return false;
         var lastWidth = srcs[srcs.length - 1].width;
         return currentWidth == lastWidth;
     }
@@ -120,13 +119,9 @@ function DynamicImage(delay) {
         return currentWidth != -1;
     }
 
-    /** Registers resizeImageEvent and loadImageEvent to events
-    window.resize and window.scroll respectively. */
-    function registerToWindow() {
-        var delayedUpdate = delayedCall(update, delay);
-        addListener(win, "scroll", delayedUpdate, isImageLoaded);
-        addListener(win, "resize", delayedUpdate, isLargestImage);
-    }
+    var delayedUpdate = delayedCall(update, delay),
+        scrollListener = new AutomaticRemovalListener(win, "scroll", delayedUpdate, isImageLoaded),
+        resizeListener = new AutomaticRemovalListener(win, "resize", delayedUpdate, isLargestImage);
 
     function returnImage(innerFn) {
         return function (argument) {
@@ -135,7 +130,14 @@ function DynamicImage(delay) {
         };
     }
 
-    registerToWindow();
+    function initialization() {
+        currentWidth = -1;
+        elem.src = "data:image/gif;base64,R0lGODlhAQABAIABAKCgoP///yH5BAEKAAEALAAAAAABAAEAAAICRAEAOw==";
+        update();
+        scrollListener.register();
+        resizeListener.register();
+    }
+
     initialization();
 
     // ------------ Public interface -----------------
@@ -186,7 +188,7 @@ function DynamicImage(delay) {
     });
 
     /* Return the image HTML element manipulated by DynamicImage. */
-    image.getElement = function() {
+    image.getElement = function () {
         return elem;
     };
 }
