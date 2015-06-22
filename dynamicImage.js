@@ -1,4 +1,4 @@
-// Dynamic Image version 3.4
+// Dynamic Image version 3.5
 
 function DynamicImage(delay) {
     delay = delay || 500; // half a second delay as default
@@ -136,6 +136,7 @@ function DynamicImage(delay) {
         update();
         scrollListener.register();
         resizeListener.register();
+        elem.onload = update;
     }
 
     initialization();
